@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pulse — Profile</title>
+  <meta name="description" content="View and manage your Pulse profile." />
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <div class="bg-animated"></div>
+
+  <div class="app-layout">
+
+    <!-- ── Sidebar ── -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-icon">⚡</div>
+        <span class="logo-text">Pulse</span>
+      </div>
+
+      <button class="nav-item" onclick="window.location.href='/feed.html'">
+        <span class="nav-icon">🏠</span><span>Home</span>
+      </button>
+      <button class="nav-item" onclick="window.location.href='/feed.html'">
+        <span class="nav-icon">🔍</span><span>Explore</span>
+      </button>
+      <button class="nav-item active" onclick="goToMyProfile()">
+        <span class="nav-icon">👤</span><span>Profile</span>
+      </button>
+      <button class="nav-item" onclick="handleLogout()">
+        <span class="nav-icon">🚪</span><span>Logout</span>
+      </button>
+
+      <div class="sidebar-user" onclick="goToMyProfile()" id="sidebar-user-box">
+        <div id="sidebar-avatar" class="avatar avatar-sm" style="background:#7c3aed;">?</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" id="sidebar-username">Loading…</div>
+          <div class="sidebar-user-handle" id="sidebar-handle">@—</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ── Profile Main ── -->
+    <main class="main-content">
+      <!-- Back button -->
+      <div class="feed-header">
+        <button class="btn btn-ghost" onclick="history.back()">← Back</button>
+        <h1 id="profile-page-title" class="gradient-text">Profile</h1>
+        <div></div>
+      </div>
+
+      <!-- Loading state -->
+      <div id="profile-loading">
+        <div class="spinner"></div>
+      </div>
+
+      <!-- Profile Content -->
+      <div id="profile-content" class="hidden">
+        <!-- Banner -->
+        <div class="profile-banner" id="profile-banner"></div>
+
+        <!-- Info Section -->
+        <div class="profile-info-section">
+          <div class="profile-avatar-wrap">
+            <div class="profile-avatar-outer">
+              <div id="profile-avatar" class="avatar avatar-xl" style="width:100%; height:100%; border-radius:50%;">?</div>
+            </div>
+            <div id="profile-action-btn"></div>
+          </div>
+
+          <h2 class="profile-username" id="profile-username">—</h2>
+          <p class="profile-handle" id="profile-handle">@—</p>
+          <p class="profile-bio" id="profile-bio"></p>
+
+          <!-- Stats -->
+          <div class="profile-stats">
+            <div class="stat-item">
+              <span class="stat-number" id="stat-posts">0</span>
+              <span class="stat-label">Posts</span>
+            </div>
+            <div class="stat-item" style="cursor:pointer" onclick="showFollowers()">
+              <span class="stat-number" id="stat-followers">0</span>
+              <span class="stat-label">Followers</span>
+            </div>
+            <div class="stat-item" style="cursor:pointer" onclick="showFollowing()">
+              <span class="stat-number" id="stat-following">0</span>
+              <span class="stat-label">Following</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Posts -->
+        <div id="profile-posts-container">
+          <div class="spinner"></div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ── Right Panel ── -->
+    <aside class="right-panel">
+      <div class="panel-card" id="profile-right-card">
+        <div class="panel-title">About</div>
+        <div id="profile-right-info" style="color:var(--text-muted); font-size:0.875rem;">
+          Loading profile info…
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Edit Bio Modal -->
+  <div class="modal-overlay hidden" id="edit-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <span class="modal-title">Edit Profile</span>
+        <button class="modal-close" onclick="closeEditModal()">✕</button>
+      </div>
+      <div class="auth-form">
+        <div class="form-group">
+          <label class="form-label" for="edit-bio">Bio</label>
+          <textarea class="textarea" id="edit-bio" placeholder="Tell the world about yourself…" maxlength="200" rows="4"></textarea>
+        </div>
+        <button class="btn btn-primary" onclick="saveProfile()">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Followers/Following Modal -->
+  <div class="modal-overlay hidden" id="follow-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <span class="modal-title" id="follow-modal-title">Followers</span>
+        <button class="modal-close" onclick="closeFollowModal()">✕</button>
+      </div>
+      <div id="follow-modal-list"></div>
+    </div>
+  </div>
+
+  <!-- Comments Modal -->
+  <div class="modal-overlay hidden" id="comments-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <span class="modal-title">Comments</span>
+        <button class="modal-close" onclick="closeCommentsModal()">✕</button>
+      </div>
+      <div id="modal-comments-list"></div>
+      <div class="comment-compose mt-3">
+        <div id="modal-compose-avatar" class="avatar avatar-sm" style="background:#7c3aed;">?</div>
+        <input
+          class="comment-input"
+          id="modal-comment-input"
+          type="text"
+          placeholder="Write a comment…"
+          onkeydown="if(event.key==='Enter') submitModalComment()"
+        />
+        <button class="btn btn-primary btn-sm" onclick="submitModalComment()">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast-container"></div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/profile.js"></script>
+</body>
+</html>

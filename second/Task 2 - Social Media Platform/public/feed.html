@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pulse — Feed</title>
+  <meta name="description" content="Your Pulse feed — stay connected with people you follow." />
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <div class="bg-animated"></div>
+
+  <div class="app-layout">
+
+    <!-- ── Sidebar ── -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-icon">⚡</div>
+        <span class="logo-text">Pulse</span>
+      </div>
+
+      <button class="nav-item active" id="nav-feed" onclick="setTab('feed')">
+        <span class="nav-icon">🏠</span><span>Home</span>
+      </button>
+      <button class="nav-item" id="nav-explore" onclick="setTab('explore')">
+        <span class="nav-icon">🔍</span><span>Explore</span>
+      </button>
+      <button class="nav-item" id="nav-profile-btn" onclick="goToMyProfile()">
+        <span class="nav-icon">👤</span><span>Profile</span>
+      </button>
+      <button class="nav-item" onclick="handleLogout()">
+        <span class="nav-icon">🚪</span><span>Logout</span>
+      </button>
+
+      <!-- Current user -->
+      <div class="sidebar-user" onclick="goToMyProfile()" id="sidebar-user-box">
+        <div id="sidebar-avatar" class="avatar avatar-sm" style="background:#7c3aed;">?</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" id="sidebar-username">Loading…</div>
+          <div class="sidebar-user-handle" id="sidebar-handle">@—</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ── Main Feed ── -->
+    <main class="main-content">
+      <!-- Header -->
+      <div class="feed-header">
+        <h1 id="feed-title">Home</h1>
+        <div class="feed-tabs">
+          <button class="feed-tab active" id="tab-feed" onclick="setTab('feed')">For You</button>
+          <button class="feed-tab" id="tab-explore" onclick="setTab('explore')">Explore</button>
+        </div>
+      </div>
+
+      <!-- Compose -->
+      <div class="compose-box" id="compose-section">
+        <div class="compose-inner">
+          <div id="compose-avatar" class="avatar" style="background:#7c3aed;">?</div>
+          <div class="compose-fields">
+            <textarea
+              class="compose-textarea"
+              id="compose-text"
+              placeholder="What's on your mind?"
+              maxlength="500"
+              rows="2"
+              oninput="updateCharCount()"
+            ></textarea>
+            <div class="compose-footer">
+              <span class="char-count" id="char-count">500</span>
+              <button class="btn btn-primary btn-sm" id="post-btn" onclick="createPost()">
+                ⚡ Post
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Posts Feed -->
+      <div id="posts-container">
+        <div class="spinner"></div>
+      </div>
+    </main>
+
+    <!-- ── Right Panel ── -->
+    <aside class="right-panel">
+      <!-- Search -->
+      <div class="panel-card">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input
+            class="search-input"
+            id="user-search"
+            type="text"
+            placeholder="Search users…"
+            oninput="debounceSearch()"
+          />
+        </div>
+        <div id="search-results" class="mt-2"></div>
+      </div>
+
+      <!-- Suggestions -->
+      <div class="panel-card" id="suggestions-panel">
+        <div class="panel-title">Who to Follow</div>
+        <div id="suggestions-list">
+          <div class="spinner" style="margin: 10px auto; width:24px; height:24px; border-width:2px;"></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Comments Modal -->
+  <div class="modal-overlay hidden" id="comments-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <span class="modal-title">Comments</span>
+        <button class="modal-close" onclick="closeCommentsModal()">✕</button>
+      </div>
+      <div id="modal-comments-list"></div>
+      <div class="comment-compose mt-3">
+        <div id="modal-compose-avatar" class="avatar avatar-sm" style="background:#7c3aed;">?</div>
+        <input
+          class="comment-input"
+          id="modal-comment-input"
+          type="text"
+          placeholder="Write a comment…"
+          onkeydown="if(event.key==='Enter') submitModalComment()"
+        />
+        <button class="btn btn-primary btn-sm" onclick="submitModalComment()">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast-container"></div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/feed.js"></script>
+</body>
+</html>
